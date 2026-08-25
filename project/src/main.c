@@ -17,15 +17,15 @@ static bool ApplyFramePolicy(void) {
     bool changed = false;
 
     if (CVarGetInteger(PR_CVAR_FPS, -1) != 30) {
+        CVarSetInteger(PR_CVAR_FPS, 30);
         changed = true;
     }
 
     if (CVarGetInteger(PR_CVAR_MATCH_REFRESH, -1) != 0) {
+        CVarSetInteger(PR_CVAR_MATCH_REFRESH, 0);
         changed = true;
     }
 
-    CVarSetInteger(PR_CVAR_FPS, 30);
-    CVarSetInteger(PR_CVAR_MATCH_REFRESH, 0);
     return changed;
 }
 
