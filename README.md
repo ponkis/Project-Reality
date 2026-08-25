@@ -52,10 +52,11 @@ preference until it is toggled again or the local configuration is reset.
 Cheats are accepted only while the file-select screen is active. Enter the
 ordered sequence `L`, `R`, `B`, `A` to toggle **Skip Intro**. Every accepted
 input appears tightly spaced in the original colorful game font at the bottom
-center and plays the cannon-aim camera sound. Completing the sequence layers the
-original success sound with Mario's `Yippee!`, rapidly flashes the completed
-`LRBA` sequence, and then removes it. Wrong inputs are silent and retain their
-normal menu behavior; no ON/OFF text notification is shown.
+center and plays the native camera-mode-change click. The final input keeps its
+own click, then the original success sound layers with Mario's `Yippee!` after a
+short delay. The completed `LRBA` sequence rapidly flashes and then disappears.
+Wrong inputs are silent and retain their normal menu behavior; no ON/OFF text
+notification is shown.
 
 This system is native game code. It reads and consumes input immediately before
 File Select's own click handler and draws through the original game font and
@@ -64,6 +65,20 @@ display-list renderer; there is no external cheat program or mod-script hook.
 The current toggle controls Ghostship's `DisablePeachCutscene` enhancement,
 which bypasses the opening cutscene when an empty save is started. The setting
 is saved immediately and can be toggled again with the same sequence.
+
+## Boot and title screens
+
+A boot-only `PROJECT REALITY / PRESENTS` screen now fades in before the original
+Super Mario 64 logo sequence. It advances automatically after two seconds and
+can be skipped with Start, A, or B after a short input guard. It is not replayed
+when attract-mode demos return to the title sequence.
+
+The logo screen now plays the normal SM64 coin sound without the combined
+"It's-a-me, Mario" voice cue. The original 128x16 copyright texture has been
+exported locally to the ignored
+`private-data/title/original_nintendo_copyright.rgba16.png` reference file; a
+custom replacement remains separate until original Project Reality artwork is
+supplied.
 
 ## Expanding Peach's Castle
 
