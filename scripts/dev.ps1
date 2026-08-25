@@ -126,7 +126,15 @@ function Stage-Runtime {
         'manifest.json',
         'build.gen',
         'dist\main.c',
-        'levels\intro\2_copyright'
+        'project_reality\title_logo',
+        'project_reality\audio\haha.wav',
+        'project_reality\audio\yeah.wav',
+        'project_reality\audio\comeon.wav',
+        'project_reality\audio\input.wav',
+        'sound\samples\sfx_mario\19_mario_yippee',
+        'sound\samples\sfx_mario_peach\08_mario_punch_yah',
+        'sound\samples\sfx_mario\13_mario_press_start_to_play',
+        'sound\samples\sfx_mario\12_mario_hello'
     )) {
         if (-not (Test-Path -LiteralPath (Join-Path $modOutput $required))) {
             throw "Project Reality mod output is incomplete; missing $required."

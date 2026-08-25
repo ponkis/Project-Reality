@@ -46,13 +46,25 @@ set(DIST_DIR "${OUTPUT_DIR}/dist")
 file(MAKE_DIRECTORY "${DIST_DIR}")
 
 set(TITLE_LOGO_PNG
-    "${CMAKE_CURRENT_SOURCE_DIR}/assets/levels/intro/2_copyright.rgba16.png"
+    "${CMAKE_CURRENT_SOURCE_DIR}/assets/title/title_logo.rgba32.png"
 )
 set(TITLE_LOGO_CONVERTER
-    "${CMAKE_CURRENT_SOURCE_DIR}/tools/rgba16_to_otex.py"
+    "${CMAKE_CURRENT_SOURCE_DIR}/tools/png_to_rgba32_otex.py"
 )
 set(TITLE_LOGO_RESOURCE
-    "${OUTPUT_DIR}/levels/intro/2_copyright"
+    "${OUTPUT_DIR}/project_reality/title_logo"
+)
+set(AUDIO_ASSET_NAMES
+    "haha.wav"
+    "yeah.wav"
+    "comeon.wav"
+    "input.wav"
+)
+set(AUDIO_OVERRIDE_RELATIVE_PATHS
+    "sound/samples/sfx_mario/19_mario_yippee"
+    "sound/samples/sfx_mario_peach/08_mario_punch_yah"
+    "sound/samples/sfx_mario/13_mario_press_start_to_play"
+    "sound/samples/sfx_mario/12_mario_hello"
 )
 
 set(GENERATED_SOURCES "")
@@ -95,17 +107,56 @@ add_custom_command(
     VERBATIM
 )
 
+set(AUDIO_OUTPUTS "")
+foreach(AUDIO_NAME IN LISTS AUDIO_ASSET_NAMES)
+    set(AUDIO_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/assets/audio/${AUDIO_NAME}")
+    set(AUDIO_OUTPUT "${OUTPUT_DIR}/project_reality/audio/${AUDIO_NAME}")
+    add_custom_command(
+        OUTPUT "${AUDIO_OUTPUT}"
+        COMMAND "${CMAKE_COMMAND}" -E make_directory
+                "${OUTPUT_DIR}/project_reality/audio"
+        COMMAND "${CMAKE_COMMAND}" -E copy_if_different
+                "${AUDIO_SOURCE}"
+                "${AUDIO_OUTPUT}"
+        DEPENDS "${AUDIO_SOURCE}"
+        COMMENT "Packaging Project Reality audio ${AUDIO_NAME}"
+        VERBATIM
+    )
+    list(APPEND AUDIO_OUTPUTS "${AUDIO_OUTPUT}")
+endforeach()
+
+set(AUDIO_OVERRIDE_OUTPUTS "")
+foreach(OVERRIDE_PATH IN LISTS AUDIO_OVERRIDE_RELATIVE_PATHS)
+    set(OVERRIDE_SOURCE
+        "${CMAKE_CURRENT_SOURCE_DIR}/assets/overrides/${OVERRIDE_PATH}"
+    )
+    set(OVERRIDE_OUTPUT "${OUTPUT_DIR}/${OVERRIDE_PATH}")
+    get_filename_component(OVERRIDE_OUTPUT_PARENT "${OVERRIDE_OUTPUT}" DIRECTORY)
+    add_custom_command(
+        OUTPUT "${OVERRIDE_OUTPUT}"
+        COMMAND "${CMAKE_COMMAND}" -E make_directory
+                "${OVERRIDE_OUTPUT_PARENT}"
+        COMMAND "${CMAKE_COMMAND}" -E copy_if_different
+                "${OVERRIDE_SOURCE}"
+                "${OVERRIDE_OUTPUT}"
+        DEPENDS "${OVERRIDE_SOURCE}"
+        COMMENT "Packaging audio override ${OVERRIDE_PATH}"
+        VERBATIM
+    )
+    list(APPEND AUDIO_OVERRIDE_OUTPUTS "${OVERRIDE_OUTPUT}")
+endforeach()
+
 add_custom_command(
     OUTPUT "${TITLE_LOGO_RESOURCE}"
     COMMAND "${CMAKE_COMMAND}" -E make_directory
-            "${OUTPUT_DIR}/levels/intro"
+            "${OUTPUT_DIR}/project_reality"
     COMMAND "${Python3_EXECUTABLE}" "${TITLE_LOGO_CONVERTER}"
             --input "${TITLE_LOGO_PNG}"
             --output "${TITLE_LOGO_RESOURCE}"
-            --width 128
-            --height 16
+            --width 1000
+            --height 444
     DEPENDS "${TITLE_LOGO_PNG}" "${TITLE_LOGO_CONVERTER}"
-    COMMENT "Converting Project Reality title logo to RGBA16"
+    COMMENT "Converting Project Reality title logo to RGBA32"
     VERBATIM
 )
 
@@ -114,4 +165,6 @@ add_custom_target(project_reality_mod ALL
         ${GENERATED_SOURCES}
         "${OUTPUT_MANIFEST}"
         "${TITLE_LOGO_RESOURCE}"
+        ${AUDIO_OUTPUTS}
+        ${AUDIO_OVERRIDE_OUTPUTS}
 )

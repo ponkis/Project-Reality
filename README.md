@@ -30,8 +30,8 @@ Core**. It continuously pins presentation to 30 FPS, disables refresh-rate
 matching, and exposes a small runtime-status page in Ghostship's Mods sidebar.
 The File Select cheat is not part of that mod: it is compiled directly into the
 game's native `engine/src/menu/file_select.c` input and rendering path. A fresh
-development runtime starts at 1280x720; resizing or fullscreen changes use the
-live viewport aspect, so widescreen is native rather than stretched.
+development runtime starts at 960x720 (4:3); resizing or fullscreen changes use
+the live viewport aspect, so widescreen remains available without stretching.
 
 Build and stage it after the engine and private archives exist:
 
@@ -52,9 +52,9 @@ preference until it is toggled again or the local configuration is reset.
 Cheats are accepted only while the file-select screen is active. Enter the
 ordered sequence `L`, `R`, `B`, `A` to toggle **Skip Intro**. Every accepted
 input appears tightly spaced in the original colorful game font at the bottom
-center and plays the native camera-mode-change click. The final input keeps its
-own click, then the original success sound layers with Mario's `Yippee!` after a
-short delay. The completed `LRBA` sequence rapidly flashes and then disappears.
+center and plays the supplied custom input cue. The final input keeps its own
+cue, then the original star success sound layers with the supplied `haha` voice
+after a short delay. The completed `LRBA` sequence rapidly flashes and then disappears.
 Wrong inputs are silent and retain their normal menu behavior; no ON/OFF text
 notification is shown.
 
@@ -71,19 +71,21 @@ is saved immediately and can be toggled again with the same sequence.
 A boot-only `PROJECT REALITY / PRESENTS` screen now fades in before the original
 Super Mario 64 logo sequence. It advances automatically after two seconds and
 can be skipped with Start, A, or B after a short input guard. It is not replayed
-when attract-mode demos return to the title sequence.
+after entering the title flow.
 
-The logo screen now plays the normal SM64 coin sound without the combined
-"It's-a-me, Mario" voice cue. The regular title screen keeps its original tiled
-backdrop but removes the interactive Mario head and its greeting/“press start
-to play” voice. Its prompt is now one centered, blinking `START` line.
+The logo screen now draws the supplied Project Reality artwork as one flat image
+with a simple ease-out zoom, plays the normal SM64 coin sound without the
+combined "It's-a-me, Mario" voice cue, and retains the original Nintendo footer.
+The regular title screen keeps its original tiled backdrop but removes the
+interactive Mario head and its greeting/“press start to play” voice. Its prompt
+is one centered, blinking `START` line, and it remains there indefinitely—AFK
+attract-mode demos are disabled.
 
-The supplied 128x16 Project Reality artwork replaces the Nintendo copyright
-texture through the removable folder mod. Its editable PNG lives under
-`project/assets/`; the build converts it to the native RGBA16 texture resource
-at the exact original asset path. The exported original remains available only
-as the ignored `private-data/title/original_nintendo_copyright.rgba16.png`
-reference.
+The editable 1000x444 RGBA artwork lives under `project/assets/title/`; the build
+converts it to a native RGBA32 texture resource in the removable folder mod.
+Custom mono 16 kHz WAV overrides under `project/assets/audio/` replace Yippee
+with `haha`, replace the normal Yah jump with `yeah`, add `comeon` as a fourth
+equally likely normal-jump voice, and provide the File Select input cue.
 
 ## Expanding Peach's Castle
 

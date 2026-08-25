@@ -8,32 +8,12 @@ from PIL import Image
 
 
 RESOURCE_TYPE_TEXTURE = 0x4F544558
-TEXTURE_TYPE_RGBA16 = 2
+TEXTURE_TYPE_RGBA32 = 1
 RESOURCE_HEADER_SIZE = 0x40
 
 
-def scale_8_to_5(value: int) -> int:
-    """Match Torch/n64graphics RGBA16 quantization exactly."""
-    return ((value + 4) * 0x1F) // 0xFF
-
-
-def encode_rgba16(image: Image.Image) -> bytes:
-    encoded = bytearray()
-
-    for red, green, blue, alpha in image.convert("RGBA").getdata():
-        pixel = (
-            (scale_8_to_5(red) << 11)
-            | (scale_8_to_5(green) << 6)
-            | (scale_8_to_5(blue) << 1)
-            | (1 if alpha else 0)
-        )
-        encoded.extend(pixel.to_bytes(2, byteorder="big"))
-
-    return bytes(encoded)
-
-
 def build_otex(image: Image.Image) -> bytes:
-    texture_data = encode_rgba16(image)
+    texture_data = image.convert("RGBA").tobytes()
     header = struct.pack(
         "<4BIIQIQI",
         0,
@@ -50,7 +30,7 @@ def build_otex(image: Image.Image) -> bytes:
     header += bytes(RESOURCE_HEADER_SIZE - len(header))
     texture_header = struct.pack(
         "<IIII",
-        TEXTURE_TYPE_RGBA16,
+        TEXTURE_TYPE_RGBA32,
         image.width,
         image.height,
         len(texture_data),
@@ -60,7 +40,7 @@ def build_otex(image: Image.Image) -> bytes:
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Convert a PNG into Ghostship native RGBA16 OTEX resource."
+        description="Convert a PNG into a Ghostship native RGBA32 OTEX resource."
     )
     parser.add_argument("--input", required=True, type=Path)
     parser.add_argument("--output", required=True, type=Path)
@@ -77,7 +57,7 @@ def main() -> None:
             )
         resource = build_otex(source)
 
-    expected_size = RESOURCE_HEADER_SIZE + 16 + args.width * args.height * 2
+    expected_size = RESOURCE_HEADER_SIZE + 16 + args.width * args.height * 4
     if len(resource) != expected_size:
         raise RuntimeError(
             f"Generated resource is {len(resource)} bytes; expected {expected_size}"
