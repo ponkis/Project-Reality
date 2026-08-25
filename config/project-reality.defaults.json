@@ -1,0 +1,12 @@
+{
+  "CVars": {
+    "gSettings": {
+      "InterpolationFPS": 30,
+      "MatchRefreshRate": 0
+    }
+  },
+  "Window": {
+    "Width": 1280,
+    "Height": 720
+  }
+}

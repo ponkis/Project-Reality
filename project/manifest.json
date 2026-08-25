@@ -1,0 +1,7 @@
+{
+  "name": "Project Reality Core",
+  "version": "0.1.0",
+  "description": "Core runtime policy and bootstrap module for Project Reality.",
+  "main": "build.gen",
+  "code_version": 1
+}

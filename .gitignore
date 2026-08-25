@@ -1,0 +1,32 @@
+# Private cartridge dumps and ROM images
+*.z64
+*.n64
+*.v64
+*.rom
+/baserom.*
+
+# Locally extracted or packed game-resource archives
+*.o2r
+*.otr
+/private-data/
+/generated/
+
+# Local build and distribution output
+/build/
+/dist/
+/out/
+/runtime/
+/project/build/
+/project/output/
+
+# Local configuration and logs
+*.log
+*.user
+*.suo
+.vs/
+/ghostship.cfg.json
+/imgui.ini
+/logs/
+/mods/
+/mods_cache/
+/saves/
