@@ -122,7 +122,12 @@ function Stage-Runtime {
     }
 
     $modOutput = Join-Path $repoRoot 'project\output'
-    foreach ($required in @('manifest.json', 'build.gen', 'dist\main.c')) {
+    foreach ($required in @(
+        'manifest.json',
+        'build.gen',
+        'dist\main.c',
+        'levels\intro\2_copyright'
+    )) {
         if (-not (Test-Path -LiteralPath (Join-Path $modOutput $required))) {
             throw "Project Reality mod output is incomplete; missing $required."
         }

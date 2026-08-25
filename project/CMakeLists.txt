@@ -45,6 +45,16 @@ set(OUTPUT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/output")
 set(DIST_DIR "${OUTPUT_DIR}/dist")
 file(MAKE_DIRECTORY "${DIST_DIR}")
 
+set(TITLE_LOGO_PNG
+    "${CMAKE_CURRENT_SOURCE_DIR}/assets/levels/intro/2_copyright.rgba16.png"
+)
+set(TITLE_LOGO_CONVERTER
+    "${CMAKE_CURRENT_SOURCE_DIR}/tools/rgba16_to_otex.py"
+)
+set(TITLE_LOGO_RESOURCE
+    "${OUTPUT_DIR}/levels/intro/2_copyright"
+)
+
 set(GENERATED_SOURCES "")
 set(BUILD_GEN_ENTRIES "")
 
@@ -85,6 +95,23 @@ add_custom_command(
     VERBATIM
 )
 
+add_custom_command(
+    OUTPUT "${TITLE_LOGO_RESOURCE}"
+    COMMAND "${CMAKE_COMMAND}" -E make_directory
+            "${OUTPUT_DIR}/levels/intro"
+    COMMAND "${Python3_EXECUTABLE}" "${TITLE_LOGO_CONVERTER}"
+            --input "${TITLE_LOGO_PNG}"
+            --output "${TITLE_LOGO_RESOURCE}"
+            --width 128
+            --height 16
+    DEPENDS "${TITLE_LOGO_PNG}" "${TITLE_LOGO_CONVERTER}"
+    COMMENT "Converting Project Reality title logo to RGBA16"
+    VERBATIM
+)
+
 add_custom_target(project_reality_mod ALL
-    DEPENDS ${GENERATED_SOURCES} "${OUTPUT_MANIFEST}"
+    DEPENDS
+        ${GENERATED_SOURCES}
+        "${OUTPUT_MANIFEST}"
+        "${TITLE_LOGO_RESOURCE}"
 )

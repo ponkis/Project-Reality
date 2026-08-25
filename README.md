@@ -74,11 +74,16 @@ can be skipped with Start, A, or B after a short input guard. It is not replayed
 when attract-mode demos return to the title sequence.
 
 The logo screen now plays the normal SM64 coin sound without the combined
-"It's-a-me, Mario" voice cue. The original 128x16 copyright texture has been
-exported locally to the ignored
-`private-data/title/original_nintendo_copyright.rgba16.png` reference file; a
-custom replacement remains separate until original Project Reality artwork is
-supplied.
+"It's-a-me, Mario" voice cue. The regular title screen keeps its original tiled
+backdrop but removes the interactive Mario head and its greeting/“press start
+to play” voice. Its prompt is now one centered, blinking `START` line.
+
+The supplied 128x16 Project Reality artwork replaces the Nintendo copyright
+texture through the removable folder mod. Its editable PNG lives under
+`project/assets/`; the build converts it to the native RGBA16 texture resource
+at the exact original asset path. The exported original remains available only
+as the ignored `private-data/title/original_nintendo_copyright.rgba16.png`
+reference.
 
 ## Expanding Peach's Castle
 
