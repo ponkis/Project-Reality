@@ -173,6 +173,15 @@ function Stage-Runtime {
 
     New-Item -ItemType Directory -Force -Path $modTarget | Out-Null
     Copy-Item -Path (Join-Path $modOutput '*') -Destination $modTarget -Recurse -Force
+
+    $rootModTarget = Join-Path $repoRoot 'mods\project-reality-core'
+    New-Item -ItemType Directory -Force -Path (Join-Path $repoRoot 'mods') | Out-Null
+    if (Test-Path -LiteralPath $rootModTarget) {
+        Remove-Item -LiteralPath $rootModTarget -Recurse -Force
+    }
+    New-Item -ItemType Directory -Force -Path $rootModTarget | Out-Null
+    Copy-Item -Path (Join-Path $modOutput '*') -Destination $rootModTarget -Recurse -Force
+
     Write-Host "Staged Project Reality runtime: $executable"
 }
 
