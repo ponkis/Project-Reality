@@ -64,13 +64,6 @@ def main() -> None:
     parser.add_argument("--width", required=True, type=int)
     parser.add_argument("--height", required=True, type=int)
     parser.add_argument(
-        "--crop",
-        nargs=4,
-        type=int,
-        metavar=("X", "Y", "WIDTH", "HEIGHT"),
-        help="Optional source rectangle to crop before conversion",
-    )
-    parser.add_argument(
         "--format",
         choices=("rgba16", "rgba32"),
         default="rgba32",
@@ -80,28 +73,12 @@ def main() -> None:
 
     with Image.open(args.input) as source:
         source.load()
-        image = source
-        if args.crop is not None:
-            crop_x, crop_y, crop_width, crop_height = args.crop
-            if (
-                crop_x < 0
-                or crop_y < 0
-                or crop_width <= 0
-                or crop_height <= 0
-                or crop_x + crop_width > source.width
-                or crop_y + crop_height > source.height
-            ):
-                raise ValueError(f"Crop rectangle {args.crop} is outside {source.size}")
-            image = source.crop(
-                (crop_x, crop_y, crop_x + crop_width, crop_y + crop_height)
-            )
-
-        if image.size != (args.width, args.height):
+        if source.size != (args.width, args.height):
             raise ValueError(
                 f"{args.input} must be {args.width}x{args.height}; "
-                f"got {image.width}x{image.height} after cropping"
+                f"got {source.width}x{source.height}"
             )
-        resource = build_otex(image, args.format)
+        resource = build_otex(source, args.format)
 
     bytes_per_pixel = 2 if args.format == "rgba16" else 4
     expected_size = RESOURCE_HEADER_SIZE + 16 + args.width * args.height * bytes_per_pixel

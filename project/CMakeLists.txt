@@ -54,15 +54,6 @@ set(TITLE_LOGO_CONVERTER
 set(TITLE_LOGO_RESOURCE
     "${OUTPUT_DIR}/project_reality/title_logo"
 )
-set(CLOCK_POPUP_PNG
-    "${CMAKE_CURRENT_SOURCE_DIR}/../private-data/title/clock.png"
-)
-set(CLOCK_POPUP_LEFT_RESOURCE
-    "${OUTPUT_DIR}/project_reality/hud/clock_left"
-)
-set(CLOCK_POPUP_RIGHT_RESOURCE
-    "${OUTPUT_DIR}/project_reality/hud/clock_right"
-)
 set(HUD_RGBA16_ASSET_NAMES
     "glyph_J"
     "glyph_Q"
@@ -192,38 +183,6 @@ add_custom_command(
     VERBATIM
 )
 
-add_custom_command(
-    OUTPUT "${CLOCK_POPUP_LEFT_RESOURCE}"
-    COMMAND "${CMAKE_COMMAND}" -E make_directory
-            "${OUTPUT_DIR}/project_reality/hud"
-    COMMAND "${Python3_EXECUTABLE}" "${TITLE_LOGO_CONVERTER}"
-            --input "${CLOCK_POPUP_PNG}"
-            --output "${CLOCK_POPUP_LEFT_RESOURCE}"
-            --width 32
-            --height 32
-            --format rgba16
-            --crop 0 0 32 32
-    DEPENDS "${CLOCK_POPUP_PNG}" "${TITLE_LOGO_CONVERTER}"
-    COMMENT "Converting the left half of the Project Reality clock popup"
-    VERBATIM
-)
-
-add_custom_command(
-    OUTPUT "${CLOCK_POPUP_RIGHT_RESOURCE}"
-    COMMAND "${CMAKE_COMMAND}" -E make_directory
-            "${OUTPUT_DIR}/project_reality/hud"
-    COMMAND "${Python3_EXECUTABLE}" "${TITLE_LOGO_CONVERTER}"
-            --input "${CLOCK_POPUP_PNG}"
-            --output "${CLOCK_POPUP_RIGHT_RESOURCE}"
-            --width 32
-            --height 32
-            --format rgba16
-            --crop 32 0 32 32
-    DEPENDS "${CLOCK_POPUP_PNG}" "${TITLE_LOGO_CONVERTER}"
-    COMMENT "Converting the right half of the Project Reality clock popup"
-    VERBATIM
-)
-
 set(HUD_RGBA16_OUTPUTS "")
 foreach(HUD_ASSET_NAME IN LISTS HUD_RGBA16_ASSET_NAMES)
     set(HUD_ASSET_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/assets/hud/${HUD_ASSET_NAME}.png")
@@ -272,8 +231,8 @@ add_custom_target(project_reality_mod ALL
         ${GENERATED_SOURCES}
         "${OUTPUT_MANIFEST}"
         "${TITLE_LOGO_RESOURCE}"
-        "${CLOCK_POPUP_LEFT_RESOURCE}"
-        "${CLOCK_POPUP_RIGHT_RESOURCE}"
+
+
         ${HUD_RGBA16_OUTPUTS}
         ${STAGE_PAINTING_OUTPUTS}
         ${AUDIO_OUTPUTS}
