@@ -54,6 +54,22 @@ set(TITLE_LOGO_CONVERTER
 set(TITLE_LOGO_RESOURCE
     "${OUTPUT_DIR}/project_reality/title_logo"
 )
+set(STAGE_PAINTING_SOURCE_DIR
+    "${CMAKE_CURRENT_SOURCE_DIR}/../private-data/title"
+)
+set(STAGE_PAINTING_ASSET_NAMES
+    "bbh1"
+    "bbh2"
+
+    "ddd1"
+    "ddd2"
+    "hmc1"
+    "hmc2"
+    "sml1"
+    "sml2"
+    "ssl1"
+    "ssl2"
+)
 set(AUDIO_ASSET_NAMES
     "haha.wav"
     "yeah.wav"
@@ -160,11 +176,34 @@ add_custom_command(
     VERBATIM
 )
 
+set(STAGE_PAINTING_OUTPUTS "")
+foreach(PAINTING_NAME IN LISTS STAGE_PAINTING_ASSET_NAMES)
+    set(PAINTING_SOURCE "${STAGE_PAINTING_SOURCE_DIR}/${PAINTING_NAME}.png")
+    set(PAINTING_OUTPUT "${OUTPUT_DIR}/project_reality/paintings/${PAINTING_NAME}")
+
+    add_custom_command(
+        OUTPUT "${PAINTING_OUTPUT}"
+        COMMAND "${CMAKE_COMMAND}" -E make_directory
+                "${OUTPUT_DIR}/project_reality/paintings"
+        COMMAND "${Python3_EXECUTABLE}" "${TITLE_LOGO_CONVERTER}"
+                --input "${PAINTING_SOURCE}"
+                --output "${PAINTING_OUTPUT}"
+                --width 64
+                --height 32
+                --format rgba16
+        DEPENDS "${PAINTING_SOURCE}" "${TITLE_LOGO_CONVERTER}"
+        COMMENT "Converting stage-select painting ${PAINTING_NAME} to RGBA16"
+        VERBATIM
+    )
+    list(APPEND STAGE_PAINTING_OUTPUTS "${PAINTING_OUTPUT}")
+endforeach()
+
 add_custom_target(project_reality_mod ALL
     DEPENDS
         ${GENERATED_SOURCES}
         "${OUTPUT_MANIFEST}"
         "${TITLE_LOGO_RESOURCE}"
+        ${STAGE_PAINTING_OUTPUTS}
         ${AUDIO_OUTPUTS}
         ${AUDIO_OVERRIDE_OUTPUTS}
 )
