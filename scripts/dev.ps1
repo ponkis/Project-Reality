@@ -127,6 +127,13 @@ function Stage-Runtime {
         'build.gen',
         'dist\main.c',
         'project_reality\title_logo',
+        'project_reality\hud\clock_left',
+        'project_reality\hud\clock_right',
+        'project_reality\hud\glyph_J',
+        'project_reality\hud\glyph_Q',
+        'project_reality\hud\glyph_V',
+        'project_reality\hud\glyph_X',
+        'project_reality\hud\glyph_Z',
         'project_reality\paintings\bbh1',
         'project_reality\paintings\bbh2',
 
